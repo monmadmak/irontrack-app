@@ -27,34 +27,34 @@ export default function FinishSessionModal({ isOpen, onClose, onFinish }: Props)
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
       
-      <div className="relative w-full max-w-md bg-[#1a1a1a] border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
-        <div className="flex items-center justify-between p-4 border-b border-neutral-800 bg-neutral-900/50">
-          <h2 className="text-xl font-bold text-white">Finish Workout</h2>
-          <button onClick={onClose} className="p-2 text-neutral-400 hover:text-white bg-neutral-800 hover:bg-neutral-700 rounded-full transition">
+      <div className="relative w-full max-w-md bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
+        <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-gray-50/50">
+          <h2 className="text-xl font-bold text-gray-900">Finish Workout</h2>
+          <button onClick={onClose} className="p-2 text-gray-400 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 rounded-full transition">
             <X size={20} />
           </button>
         </div>
         
         <div className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-neutral-400 mb-1">Bodyweight (kg) <span className="text-neutral-600">- Optional</span></label>
+            <label className="block text-sm font-bold text-gray-500 mb-1">Bodyweight (kg) <span className="text-gray-400 font-normal">- Optional</span></label>
             <input 
               type="number"
               value={bodyweight}
               onChange={(e) => setBodyweight(e.target.value)}
               placeholder="e.g. 75"
-              className="w-full bg-neutral-900 border border-neutral-800 text-white rounded-xl p-3 focus:outline-none focus:border-[#deff9a]"
+              className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl p-3 focus:outline-none focus:border-blue-500 shadow-sm"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-neutral-400 mb-1">Session Notes <span className="text-neutral-600">- Optional</span></label>
+            <label className="block text-sm font-bold text-gray-500 mb-1">Session Notes <span className="text-gray-400 font-normal">- Optional</span></label>
             <textarea 
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="How did you feel today?"
               rows={3}
-              className="w-full bg-neutral-900 border border-neutral-800 text-white rounded-xl p-3 focus:outline-none focus:border-[#deff9a] resize-none"
+              className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl p-3 focus:outline-none focus:border-blue-500 resize-none shadow-sm"
             />
           </div>
 
@@ -64,9 +64,9 @@ export default function FinishSessionModal({ isOpen, onClose, onFinish }: Props)
                 type="checkbox" 
                 checked={saveAsTemplate} 
                 onChange={(e) => setSaveAsTemplate(e.target.checked)}
-                className="w-5 h-5 accent-[#deff9a]"
+                className="w-5 h-5 accent-blue-500 rounded text-blue-600 focus:ring-blue-500"
               />
-              <span className="text-sm font-medium text-white">Save this workout as a Routine</span>
+              <span className="text-sm font-bold text-gray-700">Save this workout as a Routine</span>
             </label>
             {saveAsTemplate && (
               <input 
@@ -74,7 +74,7 @@ export default function FinishSessionModal({ isOpen, onClose, onFinish }: Props)
                 value={templateName}
                 onChange={(e) => setTemplateName(e.target.value)}
                 placeholder="Routine Name (e.g. My Push Day)"
-                className="w-full mt-3 bg-neutral-900 border border-neutral-800 text-white rounded-xl p-3 focus:outline-none focus:border-[#deff9a]"
+                className="w-full mt-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl p-3 focus:outline-none focus:border-blue-500 shadow-sm"
               />
             )}
           </div>
@@ -82,7 +82,7 @@ export default function FinishSessionModal({ isOpen, onClose, onFinish }: Props)
           <button 
             onClick={handleFinish}
             disabled={saveAsTemplate && !templateName.trim()}
-            className="w-full bg-[#deff9a] text-black font-bold text-lg py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-[#cbf078] transition-all mt-4"
+            className="w-full bg-blue-500 disabled:opacity-50 text-white font-bold text-lg py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-blue-600 active:scale-95 transition-all mt-4 shadow-md shadow-blue-500/20"
           >
             <CheckCircle size={20} strokeWidth={3} />
             SAVE & FINISH

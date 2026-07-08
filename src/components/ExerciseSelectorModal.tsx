@@ -19,12 +19,12 @@ export default function ExerciseSelectorModal({ isOpen, onClose, exercises, onSe
         onClick={onClose}
       />
       
-      <div className="relative w-full max-w-md bg-[#1a1a1a] border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl animate-in slide-in-from-bottom-10 sm:zoom-in-95 duration-200">
-        <div className="flex items-center justify-between p-4 border-b border-neutral-800 bg-neutral-900/50">
-          <h2 className="text-lg font-bold text-white">Select Exercise</h2>
+      <div className="relative w-full max-w-md bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-2xl animate-in slide-in-from-bottom-10 sm:zoom-in-95 duration-200">
+        <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-gray-50/50">
+          <h2 className="text-lg font-bold text-gray-900">Select Exercise</h2>
           <button 
             onClick={onClose}
-            className="p-2 text-neutral-400 hover:text-white bg-neutral-800 hover:bg-neutral-700 rounded-full transition"
+            className="p-2 text-gray-400 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 rounded-full transition"
           >
             <X size={20} />
           </button>
@@ -38,12 +38,12 @@ export default function ExerciseSelectorModal({ isOpen, onClose, exercises, onSe
                 onSelect(ex.id);
                 onClose();
               }}
-              className="w-full text-left p-4 hover:bg-neutral-800 rounded-2xl transition flex flex-col gap-1 group"
+              className="w-full text-left p-4 hover:bg-gray-50 rounded-2xl transition flex flex-col gap-1 group border border-transparent hover:border-gray-100"
             >
-              <span className="text-white font-medium group-hover:text-[#deff9a] transition">
+              <span className="text-gray-900 font-bold group-hover:text-blue-600 transition">
                 {ex.name}
               </span>
-              <span className="text-xs text-neutral-500">
+              <span className="text-xs text-gray-500 font-medium uppercase tracking-wide">
                 {ex.category} • Default Rest: {ex.defaultRestTime}s
               </span>
             </button>

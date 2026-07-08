@@ -10,9 +10,13 @@ import ActiveLogger from "../components/ActiveLogger";
 import ExerciseSelectorModal from "../components/ExerciseSelectorModal";
 import WorkoutSummary from "../components/WorkoutSummary";
 import HomeDashboard from "../components/HomeDashboard";
+import AnalyticsDashboard from "../components/AnalyticsDashboard";
+import HealthDashboard from "../components/HealthDashboard";
+import ProfileDashboard from "../components/ProfileDashboard";
 import CreateExerciseModal from "../components/CreateExerciseModal";
 import RoutineModal from "../components/RoutineModal";
 import FinishSessionModal from "../components/FinishSessionModal";
+import { BarChart2, Activity, User } from "lucide-react";
 
 const getLocalISOString = () => {
   const localDate = new Date();
@@ -34,7 +38,7 @@ export default function IronTrackApp() {
   } = useIronTrackData();
 
   // App View State
-  const [view, setView] = useState<"home" | "workout" | "summary">("home");
+  const [view, setView] = useState<"home" | "analytics" | "health" | "profile" | "workout" | "summary">("home");
   
   useEffect(() => {
     if (isLoaded && isWorkoutActive) {
@@ -53,29 +57,14 @@ export default function IronTrackApp() {
     routineId?: string;
   }>({ isOpen: false, mode: "create" });
   
-  const [isResting, setIsResting] = useState(false);
-  const [restTime, setRestTime] = useState(0);
-
-  // Timer Effect
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isResting && restTime > 0) {
-      interval = setInterval(() => {
-        setRestTime((prev) => prev - 1);
-      }, 1000);
-    } else if (restTime <= 0 && isResting) {
-      setIsResting(false);
-    }
-    return () => clearInterval(interval);
-  }, [isResting, restTime]);
+  const [timerTargetTime, setTimerTargetTime] = useState<number | null>(null);
 
   const handleStartEmptySession = () => {
     setSessionId(Math.random().toString(36).substring(7));
     setActiveExerciseIds([]);
     setIsWorkoutActive(true);
     setView("workout");
-    setIsResting(false);
-    setRestTime(0);
+    setTimerTargetTime(null);
   };
 
   const handleStartTemplateSession = (template: WorkoutTemplate) => {
@@ -83,8 +72,7 @@ export default function IronTrackApp() {
     setActiveExerciseIds(template.exerciseIds);
     setIsWorkoutActive(true);
     setView("workout");
-    setIsResting(false);
-    setRestTime(0);
+    setTimerTargetTime(null);
   };
 
   const calculate1RM = (w: number, r: number) => w * (1 + r / 30);
@@ -112,8 +100,7 @@ export default function IronTrackApp() {
     
     const exercise = exercises.find(e => e.id === exerciseId);
     if (exercise) {
-      setIsResting(true);
-      setRestTime(exercise.defaultRestTime);
+      setTimerTargetTime(Date.now() + exercise.defaultRestTime * 1000);
     }
   };
 
@@ -149,8 +136,7 @@ export default function IronTrackApp() {
     };
     setSessions([newSession, ...sessions]);
     setIsFinishModalOpen(false);
-    setRestTime(0);
-    setIsResting(false);
+    setTimerTargetTime(null);
     setIsWorkoutActive(false);
     setView("summary");
   };
@@ -176,19 +162,19 @@ export default function IronTrackApp() {
   const sessionSets = allSets.filter(s => s.sessionId === sessionId);
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-[#deff9a] selection:text-black pb-32">
-      <nav className="border-b border-neutral-800 bg-[#1a1a1a]/50 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
+    <div className="min-h-screen bg-gray-50 text-gray-900 pb-28 font-sans">
+      <nav className="bg-white sticky top-0 z-50 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+        <div className="max-w-md mx-auto px-5 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => view === "summary" && setView("home")}>
-            <div className="bg-[#deff9a] p-1.5 rounded-lg text-black">
+            <div className="bg-blue-500 p-2 rounded-xl text-white shadow-sm">
               <Dumbbell size={20} strokeWidth={2.5} />
             </div>
-            <h1 className="text-xl font-bold tracking-tight">IronTrack</h1>
+            <h1 className="text-xl font-bold tracking-tight text-gray-900">IronTrack</h1>
           </div>
         </div>
       </nav>
 
-      <main className="max-w-3xl mx-auto p-4 mt-4 space-y-8">
+      <main className="max-w-md mx-auto p-4 mt-2 space-y-6">
         {view === "home" && (
           <HomeDashboard 
             sets={allSets}
@@ -200,17 +186,29 @@ export default function IronTrackApp() {
             onViewTemplate={(tpl) => setRoutineModalState({ isOpen: true, mode: "view", routineId: tpl.id })}
           />
         )}
+        
+        {view === "analytics" && (
+          <AnalyticsDashboard sets={allSets} exercises={exercises} />
+        )}
+
+        {view === "health" && (
+          <HealthDashboard />
+        )}
+
+        {view === "profile" && (
+          <ProfileDashboard />
+        )}
 
         {view === "workout" && (
           <>
             <div className="space-y-8">
               {activeExerciseIds.length === 0 && (
-                <div className="text-center py-16 text-neutral-500 border-2 border-dashed border-neutral-800 rounded-3xl bg-[#1a1a1a]/50">
-                  <div className="bg-neutral-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border border-neutral-800 shadow-inner">
-                    <Dumbbell size={32} className="text-[#deff9a]" />
+                <div className="text-center py-16 text-gray-400 bg-white rounded-3xl shadow-sm border border-gray-100">
+                  <div className="bg-blue-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Dumbbell size={32} className="text-blue-500" />
                   </div>
-                  <h3 className="text-white font-bold text-xl mb-2">Step 1: Choose an Exercise</h3>
-                  <p className="text-sm max-w-[250px] mx-auto">Click the <strong className="text-[#deff9a]">ADD EXERCISE</strong> button below to start building your workout.</p>
+                  <h3 className="text-gray-900 font-bold text-xl mb-2">Build Your Routine</h3>
+                  <p className="text-sm max-w-[250px] mx-auto text-gray-500">Tap <strong className="text-blue-500">ADD EXERCISE</strong> to get started.</p>
                 </div>
               )}
 
@@ -227,10 +225,10 @@ export default function IronTrackApp() {
                     onDelete={(id) => setAllSets(allSets.filter(s => s.id !== id))}
                     onRemoveExercise={() => setActiveExerciseIds(activeExerciseIds.filter(id => id !== exId))}
                     
-                    showTimer={isResting && lastLoggedExerciseId === exId}
-                    restTime={restTime}
-                    onAddTime={(a) => setRestTime(p => Math.max(0, p + a))}
-                    onSkipTimer={() => { setRestTime(0); setIsResting(false); }}
+                    showTimer={!!timerTargetTime && lastLoggedExerciseId === exId}
+                    timerTargetTime={timerTargetTime}
+                    onAddTime={(a) => setTimerTargetTime(p => p ? p + a * 1000 : null)}
+                    onSkipTimer={() => setTimerTargetTime(null)}
                   />
                 );
               })}
@@ -238,16 +236,16 @@ export default function IronTrackApp() {
 
             <button 
               onClick={() => setIsExerciseModalOpen(true)}
-              className="w-full bg-neutral-900 border border-neutral-800 text-neutral-300 border-dashed font-bold text-lg py-5 rounded-2xl flex items-center justify-center gap-2 hover:bg-neutral-800 hover:text-white transition-all"
+              className="w-full bg-white border border-gray-200 text-gray-700 font-bold text-lg py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-gray-50 active:scale-95 transition-all shadow-sm"
             >
-              <Plus size={24} /> ADD EXERCISE
+              <Plus size={24} className="text-blue-500" /> ADD EXERCISE
             </button>
 
             {/* Finish Workout Inline Button */}
-            <div className="pt-4 border-t border-neutral-800 mt-8">
+            <div className="pt-6">
               <button 
                 onClick={() => setIsFinishModalOpen(true)}
-                className="w-full bg-white text-black font-bold text-lg py-5 rounded-2xl flex items-center justify-center gap-2 hover:bg-gray-200 active:scale-[0.98] transition-all shadow-xl"
+                className="w-full bg-blue-500 text-white font-bold text-lg py-5 rounded-2xl flex items-center justify-center gap-2 hover:bg-blue-600 active:scale-95 transition-all shadow-md shadow-blue-500/20"
               >
                 <CheckCircle size={24} />
                 FINISH WORKOUT
@@ -265,6 +263,42 @@ export default function IronTrackApp() {
           />
         )}
       </main>
+
+      {/* Bottom Navigation Bar */}
+      {view !== "workout" && view !== "summary" && (
+        <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-40 pb-safe">
+          <div className="max-w-md mx-auto flex items-center justify-around h-16">
+            <button 
+              onClick={() => setView("home")}
+              className={`flex flex-col items-center justify-center w-full h-full gap-1 transition-colors ${view === "home" ? "text-blue-500" : "text-gray-400 hover:text-gray-600"}`}
+            >
+              <Home size={24} strokeWidth={view === "home" ? 2.5 : 2} />
+              <span className="text-[10px] font-bold">Home</span>
+            </button>
+            <button 
+              onClick={() => setView("analytics")}
+              className={`flex flex-col items-center justify-center w-full h-full gap-1 transition-colors ${view === "analytics" ? "text-blue-500" : "text-gray-400 hover:text-gray-600"}`}
+            >
+              <BarChart2 size={24} strokeWidth={view === "analytics" ? 2.5 : 2} />
+              <span className="text-[10px] font-bold">Analytics</span>
+            </button>
+            <button 
+              onClick={() => setView("health")}
+              className={`flex flex-col items-center justify-center w-full h-full gap-1 transition-colors ${view === "health" ? "text-blue-500" : "text-gray-400 hover:text-gray-600"}`}
+            >
+              <Activity size={24} strokeWidth={view === "health" ? 2.5 : 2} />
+              <span className="text-[10px] font-bold">Health</span>
+            </button>
+            <button 
+              onClick={() => setView("profile")}
+              className={`flex flex-col items-center justify-center w-full h-full gap-1 transition-colors ${view === "profile" ? "text-blue-500" : "text-gray-400 hover:text-gray-600"}`}
+            >
+              <User size={24} strokeWidth={view === "profile" ? 2.5 : 2} />
+              <span className="text-[10px] font-bold">Profile</span>
+            </button>
+          </div>
+        </nav>
+      )}
 
       {/* Modals */}
       <ExerciseSelectorModal 

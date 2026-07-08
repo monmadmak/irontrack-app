@@ -14,24 +14,24 @@ export default function DashboardSummary({ sets }: Props) {
 
   return (
     <section className="grid grid-cols-2 gap-4">
-      <div className="bg-[#1a1a1a] border border-neutral-800 rounded-2xl p-5">
-        <div className="flex items-center gap-2 text-neutral-400 mb-2">
+      <div className="bg-white border border-gray-200 rounded-3xl p-5 shadow-sm">
+        <div className="flex items-center gap-2 text-gray-400 mb-2">
           <Activity size={18} />
-          <h2 className="text-sm font-medium">Work Volume</h2>
+          <h2 className="text-sm font-bold">Work Volume</h2>
         </div>
         <div className="flex items-end gap-2">
-          <span className="text-4xl font-bold text-white">{totalVolume}</span>
-          <span className="text-neutral-500 mb-1">kg</span>
+          <span className="text-4xl font-black text-gray-900 tracking-tighter">{totalVolume}</span>
+          <span className="text-gray-400 font-medium mb-1">kg</span>
         </div>
       </div>
-      <div className="bg-[#1a1a1a] border border-neutral-800 rounded-2xl p-5">
-        <div className="flex items-center gap-2 text-neutral-400 mb-2">
+      <div className="bg-white border border-gray-200 rounded-3xl p-5 shadow-sm">
+        <div className="flex items-center gap-2 text-gray-400 mb-2">
           <TrendingUp size={18} />
-          <h2 className="text-sm font-medium">Sets Completed</h2>
+          <h2 className="text-sm font-bold">Sets Completed</h2>
         </div>
         <div className="flex items-end gap-2">
-          <span className="text-4xl font-bold text-[#deff9a]">{validSets.length}</span>
-          <span className="text-neutral-500 mb-1">sets</span>
+          <span className="text-4xl font-black text-blue-600 tracking-tighter">{validSets.length}</span>
+          <span className="text-gray-400 font-medium mb-1">sets</span>
         </div>
       </div>
     </section>

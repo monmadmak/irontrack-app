@@ -43,43 +43,43 @@ export default function ProgressChart({ sets }: Props) {
   }, [sets]);
 
   return (
-    <section className="bg-[#1a1a1a] border border-neutral-800 rounded-2xl p-5">
+    <section className="bg-white border border-gray-200 rounded-3xl p-5 shadow-sm">
       <div className="mb-6">
-        <h2 className="text-lg font-bold text-white flex items-center">
+        <h2 className="text-lg font-bold text-gray-900 flex items-center">
           Workout Volume Progress
           <InfoTooltip text="Volume = Sets × Reps × Weight. It shows your total workload. An increasing trend means you are getting stronger!" />
         </h2>
-        <p className="text-sm text-neutral-400">Total volume lifted per day</p>
+        <p className="text-sm font-medium text-gray-500">Total volume lifted per day</p>
       </div>
 
       {chartData.length === 0 ? (
-        <div className="text-center py-10 text-neutral-500">
+        <div className="text-center py-10 text-gray-400 font-medium">
           Not enough data to display progress yet.
         </div>
       ) : (
         <div style={{ width: '100%', height: 256 }}>
-          <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
+          <ResponsiveContainer width="100%" height={256} minWidth={1} minHeight={1}>
             <LineChart data={chartData} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
               <XAxis 
                 dataKey="date" 
-                stroke="#666" 
+                stroke="#9ca3af" 
                 fontSize={12} 
                 tickFormatter={(val) => val.substring(5)} // Show MM-DD
               />
-              <YAxis stroke="#666" fontSize={12} />
+              <YAxis stroke="#9ca3af" fontSize={12} />
               <Tooltip 
-                contentStyle={{ backgroundColor: '#1a1a1a', borderColor: '#333', borderRadius: '8px' }}
-                itemStyle={{ color: '#deff9a' }}
+                contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e5e7eb', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                itemStyle={{ color: '#2563eb', fontWeight: 'bold' }}
               />
               <Line 
                 type="monotone" 
                 dataKey="volume" 
                 name="Total Volume (kg)"
-                stroke="#deff9a" 
+                stroke="#3b82f6" 
                 strokeWidth={3}
-                dot={{ r: 4, fill: '#deff9a', strokeWidth: 0 }}
-                activeDot={{ r: 6, fill: '#fff', stroke: '#deff9a', strokeWidth: 2 }}
+                dot={{ r: 4, fill: '#3b82f6', strokeWidth: 0 }}
+                activeDot={{ r: 6, fill: '#ffffff', stroke: '#2563eb', strokeWidth: 2 }}
               />
             </LineChart>
           </ResponsiveContainer>
